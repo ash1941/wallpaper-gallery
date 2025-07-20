@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallpaper Gallery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .dark {
+      background-color: #111827;
+      color: white;
+    }
+    .dark .hero-section {
+      background-blend-mode: overlay;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+    }
+    .hero-section {
+      background: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3005b794-e54b-42ff-9e0f-bcb5063a8c4a.png') no-repeat center center/cover;
+      height: 60vh;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="bg-white shadow">
+    <nav class="flex items-center justify-between py-4 px-6 max-w-7xl mx-auto">
+      <div class="logo">
+        <a href="#" class="text-2xl font-bold text-blue-600">Wallpaper Gallery</a>
+      </div>
+      <div class="flex items-center space-x-6">
+        <a href="#nature" class="text-gray-700 hover:text-blue-600">Nature</a>
+        <a href="#abstract" class="text-gray-700 hover:text-blue-600">Abstract</a>
+        <a href="#technology" class="text-gray-700 hover:text-blue-600">Technology</a>
+        <a href="#animals" class="text-gray-700 hover:text-blue-600">Animals</a>
+      </div>
+      <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-gray-600">
+        <i class="fas fa-moon"></i>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section flex items-center justify-center text-center text-white">
+    <div class="hero-content max-w-4xl px-4 pt-24">
+      <h1 class="text-5xl font-bold mb-6">Explore Stunning Wallpapers</h1>
+      <p class="text-xl mb-8">Find the perfect wallpaper for your device from various genres.</p>
+    </div>
+  </section>
+
+  <!-- Wallpaper Gallery -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-10">Wallpaper Categories</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Nature -->
+        <div id="nature" class="bg-gray-100 rounded-lg overflow-hidden shadow-md">
+          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/0aae31d6-bb83-4a95-94f7-f2312b008e65.png" alt="Nature Wallpaper" class="w-full">
+          <div class="p-4">
+            <h3 class="font-bold text-lg">Nature</h3>
+            <div class="mt-2">
+              <a href="#" class="inline-block bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Download</a>
+            </div>
+          </div>
+        </div>
+        <!-- Abstract -->
+        <div id="abstract" class="bg-gray-100 rounded-lg overflow-hidden shadow-md">
+          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e177213b-f792-40b4-9bdb-56854c972e3f.png" alt="Abstract Wallpaper" class="w-full">
+          <div class="p-4">
+            <h3 class="font-bold text-lg">Abstract</h3>
+            <a href="#" class="text-blue-600 hover:underline">View Wallpapers</a>
+          </div>
+        </div>
+        <!-- Technology -->
+        <div id="technology" class="bg-gray-100 rounded-lg overflow-hidden shadow-md">
+          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3f680327-05f0-46a8-8fa1-92a2133f756c.png" alt="Technology Wallpaper" class="w-full">
+          <div class="p-4">
+            <h3 class="font-bold text-lg">Technology</h3>
+            <a href="#" class="text-blue-600 hover:underline">View Wallpapers</a>
+          </div>
+        </div>
+        <!-- Animals -->
+        <div id="animals" class="bg-gray-100 rounded-lg overflow-hidden shadow-md">
+          <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/7d214b87-080a-478e-a456-ffd77f401407.png" alt="Animals Wallpaper" class="w-full">
+          <div class="p-4">
+            <h3 class="font-bold text-lg">Animals</h3>
+            <a href="#" class="text-blue-600 hover:underline">View Wallpapers</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4">
+    <div class="max-w-7xl mx-auto text-center">
+      <p>&copy; 2023 Wallpaper Gallery. All rights reserved.</p>
+    </div>
+  </footer>
+  <script>
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      const icon = darkModeToggle.querySelector('i');
+      if (document.body.classList.contains('dark')) {
+        icon.className = 'fas fa-sun';
+      } else {
+        icon.className = 'fas fa-moon';
+      }
+    });
+  </script>
+</body>
+</html>
+```
