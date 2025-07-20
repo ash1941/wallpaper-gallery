@@ -22,10 +22,10 @@
 <body class="px-8 py-4">
   <header class="flex justify-between items-center mb-8">
     <h1 class="text-2xl font-bold text-white">Wallpaper Hub</h1>
-    <nav class="space-x-4 text-sm">
+    <nav class="space-x-4 text-sm" id="mainNav">
       <a href="#" class="hover:underline" onclick="loadWallpapers('all')">Home</a>
       <a href="#" class="hover:underline" onclick="scrollToSection('genreSection')">Genres</a>
-      <a href="#" class="hover:underline" onclick="scrollToSection('adminSection')">Admin Upload</a>
+      <a href="#" class="hover:underline hidden" id="adminNavLink" onclick="scrollToSection('adminSection')">Admin Upload</a>
       <a href="#" class="hover:underline" onclick="scrollToSection('loginSection')">Login</a>
       <a href="#" class="hover:underline" onclick="scrollToSection('registerSection')">Register</a>
     </nav>
@@ -109,10 +109,13 @@
 
     firebase.auth().onAuthStateChanged((user) => {
       const adminSection = document.getElementById("adminSection");
+      const adminNavLink = document.getElementById("adminNavLink");
       if (user && user.uid === ADMIN_UID) {
         adminSection.classList.remove("hidden");
+        adminNavLink.classList.remove("hidden");
       } else {
         adminSection.classList.add("hidden");
+        adminNavLink.classList.add("hidden");
       }
     });
 
