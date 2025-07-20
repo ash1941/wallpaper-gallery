@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wallpaper Hub</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      background-color: #1a1b26;
+      color: white;
+    }
+    input, select {
+      background-color: #2d2f40;
+    }
+  </style>
+</head>
+<body class="px-8 py-4">
+  <header class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-white">Wallpaper Hub</h1>
+    <nav class="space-x-4 text-sm">
+      <a href="#" class="hover:underline" onclick="loadWallpapers('all')">Home</a>
+      <a href="#" class="hover:underline" onclick="scrollToSection('genreSection')">Genres</a>
+      <a href="#" class="hover:underline" onclick="scrollToSection('adminSection')">Admin Upload</a>
+      <a href="#" class="hover:underline" onclick="scrollToSection('loginSection')">Login</a>
+      <a href="#" class="hover:underline" onclick="scrollToSection('registerSection')">Register</a>
+    </nav>
+  </header>
+
+  <section class="text-center mb-8">
+    <h2 class="text-3xl font-bold mb-2">Explore Stunning Wallpapers</h2>
+    <p class="text-sm text-gray-300">Choose from a wide range of genres including Nature, Sci-Fi, Anime, Minimal, Abstract, Adult & more.</p>
+    <input type="text" id="searchInput" placeholder="Search wallpapers by keyword or resolution..." class="mt-4 px-4 py-2 w-1/2 rounded" oninput="searchWallpapers()">
+  </section>
+
+  <section id="genreSection" class="mb-6">
+    <div class="grid grid-cols-4 gap-4">
+      <button class="bg-gray-600 text-white py-2 px-4 rounded" onclick="loadWallpapers('Nature')">Nature</button>
+      <button class="bg-gray-600 text-white py-2 px-4 rounded" onclick="loadWallpapers('Sci-Fi')">Sci-Fi</button>
+      <button class="bg-gray-600 text-white py-2 px-4 rounded" onclick="loadWallpapers('Anime')">Anime</button>
+      <button class="bg-gray-600 text-white py-2 px-4 rounded" onclick="loadWallpapers('Minimal')">Minimal</button>
+      <button class="bg-gray-600 text-white py-2 px-4 rounded" onclick="loadWallpapers('Abstract')">Abstract</button>
+      <button class="bg-gray-600 text-white py-2 px-4 rounded" onclick="loadWallpapers('Fantasy')">Fantasy</button>
+      <button class="bg-gray-600 text-white py-2 px-4 rounded" onclick="loadWallpapers('Technology')">Technology</button>
+      <button class="bg-red-600 text-white py-2 px-4 rounded" onclick="loadWallpapers('Adult')">Adult (18+)</button>
+    </div>
+  </section>
+
+  <section class="mb-8">
+    <h3 class="text-lg font-semibold mb-2">Latest Wallpapers</h3>
+    <div id="wallpaperGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+  </section>
+
+  <section id="adminSection" style="display: none;" class="mb-8">
+    <h3 class="text-lg font-semibold mb-2">Admin Only: Bulk Upload Wallpapers</h3>
+    <p class="text-red-400 text-sm mb-2">Note: Only site owner has access to this section.</p>
+    <input type="text" id="uploadTitle" placeholder="Upload Title" class="w-full mb-2 p-2 rounded">
+    <select id="uploadGenre" class="w-full mb-2 p-2 rounded">
+      <option>Select Genre</option>
+      <option>Nature</option>
+      <option>Anime</option>
+      <option>Sci-Fi</option>
+      <option>Fantasy</option>
+      <option>Technology</option>
+      <option>Abstract</option>
+      <option>Adult</option>
+    </select>
+    <input type="text" id="uploadResolution" placeholder="Resolution (e.g., 1920x1080)" class="w-full mb-2 p-2 rounded">
+    <input type="file" id="uploadFiles" multiple class="mb-2">
+    <button onclick="uploadWallpapers()" class="bg-purple-600 text-white px-6 py-2 rounded">Upload All</button>
+  </section>
+
+  <section id="loginSection" class="mb-8">
+    <h3 class="text-lg font-semibold mb-2">User Login</h3>
+    <input type="email" id="loginEmail" placeholder="Email" class="w-full mb-2 p-2 rounded">
+    <input type="password" id="loginPassword" placeholder="Password" class="w-full mb-2 p-2 rounded">
+    <button id="loginButton" class="bg-green-600 text-white px-6 py-2 rounded">Login</button>
+  </section>
+
+  <section id="registerSection">
+    <h3 class="text-lg font-semibold mb-2">User Registration</h3>
+    <input type="text" placeholder="Username" class="w-full mb-2 p-2 rounded">
+    <input type="email" id="registerEmail" placeholder="Email" class="w-full mb-2 p-2 rounded">
+    <input type="password" id="registerPassword" placeholder="Password" class="w-full mb-2 p-2 rounded">
+    <button id="registerButton" class="bg-yellow-500 text-white px-6 py-2 rounded">Register</button>
+  </section>
+
+  <footer class="text-center mt-12 text-gray-400 text-sm">© 2025 Wallpaper Hub. All rights reserved.</footer>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_CbrIw9qIkDLoCVlTTbSUg-68YTRbgBc",
+      authDomain: "wallpaper-site-69f7b.firebaseapp.com",
+      projectId: "wallpaper-site-69f7b",
+      storageBucket: "wallpaper-site-69f7b.appspot.com",
+      messagingSenderId: "379837320384",
+      appId: "1:379837320384:web:2dfc88803790beb24e7125",
+      measurementId: "G-J1RXS3CR01"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    const ADMIN_UID = "vPjVJZavOfZW2YPR3H4ewUSkeZ03";
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user && user.uid === ADMIN_UID) {
+        document.getElementById("adminSection").style.display = "block";
+      } else {
+        document.getElementById("adminSection").style.display = "none";
+      }
+    });
+
+    document.getElementById("loginButton").addEventListener("click", () => {
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(() => alert("Login successful"))
+        .catch((error) => alert("Login failed: " + error.message));
+    });
+
+    document.getElementById("registerButton").addEventListener("click", () => {
+      const email = document.getElementById("registerEmail").value;
+      const password = document.getElementById("registerPassword").value;
+
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .then(() => alert("Registration successful"))
+        .catch((error) => alert("Registration failed: " + error.message));
+    });
+
+    function scrollToSection(id) {
+      const section = document.getElementById(id);
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function uploadWallpapers() {
+      const title = document.getElementById("uploadTitle").value;
+      const genre = document.getElementById("uploadGenre").value;
+      const resolution = document.getElementById("uploadResolution").value;
+      const files = document.getElementById("uploadFiles").files;
+
+      if (!title || !genre || !resolution || !files.length) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      for (let file of files) {
+        const storageRef = storage.ref(`wallpapers/${file.name}`);
+        await storageRef.put(file);
+        const url = await storageRef.getDownloadURL();
+
+        await db.collection("wallpapers").add({ title, genre, resolution, url });
+      }
+
+      alert("Upload successful");
+    }
+
+    async function loadWallpapers(filterGenre = "all") {
+      const grid = document.getElementById("wallpaperGrid");
+      grid.innerHTML = "";
+      const snapshot = await db.collection("wallpapers").get();
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (!data.url) return;
+        if (filterGenre !== "all" && data.genre !== filterGenre) return;
+
+        const tile = document.createElement("div");
+        tile.innerHTML = `
+          <img src="${data.url}" alt="${data.title}" class="rounded w-full">
+          <p class="mt-1 text-sm text-center">${data.title}</p>
+        `;
+        grid.appendChild(tile);
+      });
+    }
+
+    function searchWallpapers() {
+      const term = document.getElementById("searchInput").value.toLowerCase();
+      loadWallpapers("all").then(() => {
+        const grid = document.getElementById("wallpaperGrid");
+        Array.from(grid.children).forEach(tile => {
+          const text = tile.innerText.toLowerCase();
+          tile.style.display = text.includes(term) ? "block" : "none";
+        });
+      });
+    }
+
+    loadWallpapers();
+  </script>
+</body>
+</html>
